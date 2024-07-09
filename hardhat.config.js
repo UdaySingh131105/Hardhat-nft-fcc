@@ -16,6 +16,8 @@ module.exports = {
    solidity: {
       compilers: [
          { version: "0.8.19" },
+         { version: "0.8.18" },
+         { version: "0.8.20" },
          { version: "0.4.19" },
          { version: "0.8.0" },
          { version: "0.6.6" },
@@ -32,9 +34,9 @@ module.exports = {
       hardhat: {
          chainId: 31337,
          blockConfirmation: 1,
-         forking: {
-            url: MAINNET_RPC_URL,
-         },
+         // forking: {
+         //    url: MAINNET_RPC_URL,
+         // },
       },
       sepolia: {
          url: SEPOLIA_RPC_URL,
@@ -62,11 +64,11 @@ module.exports = {
       apiKey: ETHERSCAN_API_KEY,
    },
    gasReporter: {
-      enabled: true,
+      // enabled: true,
       outputFile: "gas-report.txt",
       noColors: true,
       currency: "USD",
-      coinmarketcap: COINMARKETCAP_API_KEY,
+      // coinmarketcap: COINMARKETCAP_API_KEY,
       token: "ETH",
    },
 }
