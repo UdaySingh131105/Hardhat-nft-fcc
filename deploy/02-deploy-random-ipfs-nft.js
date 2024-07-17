@@ -1,10 +1,31 @@
-const { deployments, ethers } = require("hardhat")
-const { networkConfig } = require("../helper-hardhat-config")
+const { deployments, ethers, network } = require("hardhat")
+const { networkConfig, developmentChains } = require("../helper-hardhat-config")
+const { storeImages, storeTokenUriMetadata } = require("../utils/uploadToIPFS")
+
+const _FUND_AMMOUNT = ethers.parseEther("0.05")
+
+const metadataTemplate = {
+   name: "",
+   description: "",
+   image: "",
+   attributes: [
+      {
+         trait_type: "Cuteness",
+         value: 100,
+      },
+   ],
+}
 
 module.exports = async () => {
    const { deploy, log } = deployments
    const accounts = await ethers.getSigners()
    const signer = accounts[0]
+   const chainId = network.config.chainId
+   let tokenUris
+
+   if (process.env.UPLOAD_TO_PINATA) {
+      tokenUris = await handleTokenUris()
+   }
 
    let VRFCoordinatorV2_5Mock, _mockAddress, _subscriptionId
 
@@ -52,3 +73,25 @@ module.exports = async () => {
 
    const _args = [_mockAddress, _gasLane, _subscriptionId, _callBackGasLimit, _mintFee]
 }
+
+async function handleTokenUris() {
+   let tokenUris = []
+   // store the image in ipfs
+   const { responses: imageUploadResponses, files } = await storeImages()
+
+   for (const imageUploadResponseIndex in imageUploadResponses) {
+      let tokenUriMetadata = { ...metadataTemplate }
+      tokenUriMetadata.name = files[imageUploadResponseIndex].replace(/\b.png|\b.jpg|\b.jpeg/, "")
+      tokenUriMetadata.description = `An adorable ${tokenUriMetadata.name} pup!`
+      tokenUriMetadata.image = `ipfs://${imageUploadResponses[imageUploadResponseIndex].IpfsHash}`
+
+      // store metadata in ipfs
+      console.log(`Uploading ${tokenUriMetadata.name}...`)
+      const metadataUploadResponse = await storeTokenUriMetadata(tokenUriMetadata)
+      tokenUris.push(`ipfs://${metadataUploadResponse.IpfsHash}`)
+   }
+
+   return tokenUris
+}
+
+module.exports.tags = ["all", "randomipfs", "main"]

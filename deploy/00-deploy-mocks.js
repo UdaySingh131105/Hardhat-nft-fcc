@@ -1,6 +1,7 @@
 const { deployments, getNamedAccounts, network, ethers } = require("hardhat")
 const { developmentChains } = require("../helper-hardhat-config")
 
+const _BASE_FEE = ethers.parseEther("0.25")
 const _GAS_PRICE_LINK = 1e9
 const _WEIPERUNITLINK = 4323045521844006
 

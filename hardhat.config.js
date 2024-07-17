@@ -14,21 +14,15 @@ const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
    solidity: {
-      compilers: [
-         { version: "0.8.19" },
-         { version: "0.8.18" },
-         { version: "0.8.20" },
-         { version: "0.4.19" },
-         { version: "0.8.0" },
-         { version: "0.6.6" },
-      ],
+      compilers: [{ version: "0.8.19" }, { version: "0.8.20" }],
       settings: {
          optimizer: {
             enabled: true,
-            runs: 1000,
+            runs: 200,
          },
       },
    },
+
    defaultNetwork: "hardhat",
    networks: {
       hardhat: {
@@ -37,6 +31,7 @@ module.exports = {
          // forking: {
          //    url: MAINNET_RPC_URL,
          // },
+         allowUnlimitedContractSize: true,
       },
       sepolia: {
          url: SEPOLIA_RPC_URL,
