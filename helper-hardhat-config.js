@@ -8,7 +8,7 @@ const networkConfig = {
       keyHash: "0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae",
       subscriptionId:
          "105752341827482583864337633755448387871087161753199591116132016548161125172134",
-      entranceFee: ethers.parseEther("0.01"),
+      entranceFee: ethers.parseEther("0.01"), // used in raffle contract
       callBackGasLimit: "300000",
       interval: "30",
    },
