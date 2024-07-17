@@ -19,8 +19,14 @@ async function storeImages() {
       const filePath = IMAGE_DIR_PATH + "/" + files[fileIndex]
       const ReadableStreamForFiles = fs.createReadStream(filePath)
 
+      const options = {
+         pinataMetadata: {
+            name: files[fileIndex],
+         },
+      }
+
       try {
-         const response = await pinata.pinFileToIPFS(ReadableStreamForFiles)
+         const response = await pinata.pinFileToIPFS(ReadableStreamForFiles, options)
          responses.push(response)
       } catch (error) {
          console.log(error)
