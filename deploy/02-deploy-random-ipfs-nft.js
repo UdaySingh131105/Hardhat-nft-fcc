@@ -2,7 +2,8 @@ const { deployments, ethers, network } = require("hardhat")
 const { networkConfig, developmentChains } = require("../helper-hardhat-config")
 const { storeImages, storeTokenUriMetadata } = require("../utils/uploadToIPFS")
 
-const _FUND_AMMOUNT = ethers.parseEther("0.05")
+// fund amount for mock vrf subscription
+const _FUND_AMMOUNT = ethers.parseEther("500")
 
 const metadataTemplate = {
    name: "",
@@ -23,8 +24,14 @@ module.exports = async () => {
    const chainId = network.config.chainId
    let tokenUris
 
-   if (process.env.UPLOAD_TO_PINATA) {
+   if (process.env.UPLOAD_TO_PINATA == "true") {
       tokenUris = await handleTokenUris()
+   } else {
+      tokenUris = [
+         "ipfs://QmaVkBn2tKmjbhphU7eyztbvSQU5EXDdqRyXZtRhSGgJGo",
+         "ipfs://QmYQC5aGZu2PTH8XzbJrbDnvhj3gVs7ya33H9mqUNvST3d",
+         "ipfs://QmZYmH5iDbD6v3U2ixoVAjioSzvWJszDzYdbeCLquGSpVm",
+      ]
    }
 
    let VRFCoordinatorV2_5Mock, _mockAddress, _subscriptionId
@@ -71,7 +78,29 @@ module.exports = async () => {
    const _callBackGasLimit = networkConfig[chainId].callBackGasLimit
    const _mintFee = networkConfig[chainId].mintFee
 
-   const _args = [_mockAddress, _gasLane, _subscriptionId, _callBackGasLimit, _mintFee]
+   const _args = [_mockAddress, _gasLane, _subscriptionId, _callBackGasLimit, _mintFee, tokenUris]
+
+   const randomIpfsNft = await deploy("RandomIpfsNft", {
+      from: signer.address,
+      log: true,
+      args: _args,
+   })
+
+   log("-------------------------------------------------------------")
+   if (developmentChains.includes(network.name)) {
+      const response = await VRFCoordinatorV2_5Mock.addConsumer(
+         _subscriptionId,
+         randomIpfsNft.address
+      )
+      await response.wait(1)
+
+      log(`consumer Added`)
+   }
+
+   if (!developmentChains.includes(network.name)) {
+      console.log("Verifying...")
+      await verify(randomIpfsNft.address, _args)
+   }
 }
 
 async function handleTokenUris() {

@@ -11,6 +11,7 @@ const networkConfig = {
       entranceFee: ethers.parseEther("0.01"), // used in raffle contract
       callBackGasLimit: "300000",
       interval: "30",
+      mintFee: ethers.parseEther("0.05"),
    },
    31337: {
       name: "hardhat",
@@ -24,6 +25,7 @@ const networkConfig = {
       poolAddressProviderAddress: "0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e",
       DAI_ETH_Price_Feed: "0x773616E4d11A78F511299002da57A0a94577F1f4",
       DAI_Token_Address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      mintFee: ethers.parseEther("0.01"),
    },
 }
 
