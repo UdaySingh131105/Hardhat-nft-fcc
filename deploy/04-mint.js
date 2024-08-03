@@ -31,6 +31,7 @@ module.exports = async () => {
       setTimeout(() => reject("Timeout: 'NFTMinted' event did not fire"), 300000) // 5 minute timeout time
       // setup listener for our event
       randomIpfsNft.once("NftMinted", async () => {
+         console.log(`Random IPFS NFT index 0 tokenURI: ${await randomIpfsNft.tokenURI(0)}`)
          resolve()
       })
       const randomIpfsMintTx = await randomIpfsNft.requestNft({ value: mintFee.toString() })
@@ -45,7 +46,6 @@ module.exports = async () => {
          )
          await VRFCoordinatorV2_5Mock.fulfillRandomWords(requestId, randomIpfsNft.target)
       }
-      console.log(`Random IPFS NFT index 0 tokenURI: ${await randomIpfsNft.tokenURI(0)}`)
    })
    log("----------------------------------------------------------------")
 
