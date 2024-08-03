@@ -1,6 +1,7 @@
 const { deployments, ethers, network } = require("hardhat")
 const { networkConfig, developmentChains } = require("../helper-hardhat-config")
 const { storeImages, storeTokenUriMetadata } = require("../utils/uploadToIPFS")
+const { verify } = require("../utils/verify")
 
 // fund amount for mock vrf subscription
 const _FUND_AMMOUNT = ethers.parseEther("500")
