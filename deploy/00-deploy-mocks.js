@@ -4,6 +4,8 @@ const { developmentChains } = require("../helper-hardhat-config")
 const _BASE_FEE = ethers.parseEther("0.25")
 const _GAS_PRICE_LINK = 1e9
 const _WEIPERUNITLINK = 4323045521844006
+const DECIMALS = 18
+const INITIAL_ANSWER = 200000000000
 
 module.exports = async function () {
    const { deploy, log } = deployments
@@ -23,8 +25,16 @@ module.exports = async function () {
          args: _args,
       })
 
+      log("---------------------------------------------")
+
+      await deploy("MockV3Aggregator", {
+         contract: "MockV3Aggregator",
+         from: deployer,
+         log: true,
+         args: [DECIMALS, INITIAL_ANSWER],
+      })
+
       log("Mocks Deployed!!..........................")
-      log("-----------------------------------------------------------------")
    }
 }
 
