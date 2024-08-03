@@ -42,9 +42,11 @@ const lowTokenUri =
               const lowSVG = await dynamicSvgNft.getLowSVG()
               const highSVG = await dynamicSvgNft.getHighSVG()
               const priceFeed = await dynamicSvgNft.getPriceFeed()
+              const author = await dynamicSvgNft.getAuthor()
               assert.equal(lowSVG, lowSVGImageuri)
               assert.equal(highSVG, highSVGimageUri)
               assert.equal(priceFeed, mockV3Aggregator.target)
+              assert.equal(author, "UDAY SINGH")
            })
         })
 
@@ -76,6 +78,15 @@ const lowTokenUri =
               const price = await mockV3Aggregator.latestRoundData()
               const tokenURI = await dynamicSvgNft.tokenURI(0)
               assert.equal(tokenURI, highTokenUri)
+           })
+        })
+
+        describe("TokenId", () => {
+           it("Reverts if invalid TokenId", async () => {
+              await expect(dynamicSvgNft.tokenURI(100)).to.be.revertedWithCustomError(
+                 dynamicSvgNft,
+                 "ERC721Metadata__URI_QueryFor_NonExistentToken"
+              )
            })
         })
      })
